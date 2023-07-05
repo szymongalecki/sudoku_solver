@@ -1,4 +1,4 @@
-from sudoku import row, col, block, possible, next, solve
+from sudoku import Sudoku
 
 puzzle = [
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
@@ -24,22 +24,29 @@ solution = [
     [3, 4, 5, 2, 8, 6, 1, 7, 9],
 ]
 
+s = Sudoku(puzzle)
+
 
 def test_row():
-    assert row(puzzle, r=0) == [5, 3, 0, 0, 7, 0, 0, 0, 0]
+    assert s.row(r=0) == [5, 3, 0, 0, 7, 0, 0, 0, 0]
 
 
 def test_col():
-    assert col(puzzle, c=0) == [5, 6, 0, 8, 4, 7, 0, 0, 0]
+    assert s.col(c=0) == [5, 6, 0, 8, 4, 7, 0, 0, 0]
 
 
 def test_block():
-    assert block(puzzle, r=7, c=4) == [0, 0, 0, 4, 1, 9, 0, 8, 0]
+    assert s.block(r=7, c=4) == [0, 0, 0, 4, 1, 9, 0, 8, 0]
 
 
 def test_possible():
-    assert possible(puzzle, r=3, c=1) == [1, 2, 5]
+    assert s.possible(r=3, c=1) == [1, 2, 5]
 
 
 def test_next():
-    assert next(puzzle) == (0, 2)
+    assert s.next() == (0, 2)
+
+
+def test_solve():
+    s.solve()
+    assert s.grid == solution
