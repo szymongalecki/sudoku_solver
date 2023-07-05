@@ -13,11 +13,14 @@ puzzle = [
 
 class Sudoku:
     def __init__(self, grid: list[list[int]]) -> None:
-        self.grid = grid
+        self.grid = grid.copy()
         self.size = 9
 
-    def board(self):
-        print(self.grid)
+    def __str__(self) -> str:
+        s = ""
+        for row in self.grid:
+            s += f"{row}\n"
+        return s[:-1]
 
     def row(self, r: int) -> list[int]:
         return self.grid[r]
@@ -62,56 +65,4 @@ class Sudoku:
 
 s = Sudoku(puzzle)
 s.solve()
-s.board()
-
-
-def row(puzzle: list[list[int]], r: int) -> list[int]:
-    return puzzle[r]
-
-
-def col(puzzle: list[list[int]], c: int) -> list[int]:
-    return [digit for digit in [puzzle[r][c] for r in range(9)]]
-
-
-def block(puzzle: list[list[int]], r: int, c: int):
-    i = r // 3
-    j = c // 3
-    block = []
-    for r in range(i * 3, (i * 3) + 3):
-        for c in range(j * 3, (j * 3) + 3):
-            block.append(puzzle[r][c])
-    return block
-
-
-def possible(puzzle: list[list[int]], r: int, c: int) -> list[int]:
-    digits = {1, 2, 3, 4, 5, 6, 7, 8, 9}
-    return list(
-        digits - set(block(puzzle, r, c)) - set(row(puzzle, r)) - set(col(puzzle, c))
-    )
-
-
-def next(puzzle: list[list[int]]) -> tuple[int, int] | None:
-    for r in range(9):
-        for c in range(9):
-            if puzzle[r][c] == 0:
-                return (r, c)
-    return None
-
-
-def solve(puzzle: list[list[int]]):
-    if next(puzzle):
-        r, c = next(puzzle)
-    else:
-        return True
-
-    digits = possible(puzzle, r, c)
-    for d in digits:
-        puzzle[r][c] = d
-        if solve(puzzle):
-            return True
-        puzzle[r][c] = 0
-    return False
-
-
-solve(puzzle)
-print(puzzle)
+print(s)
