@@ -52,6 +52,7 @@ class Sudoku:
         return s
 
     def __valid_dimensions(grid: list[list[int]]) -> bool:
+        """Check if provided Sudoku grid has valid dimensions"""
         try:
             if len(grid) != 9 or len(grid[0]) != 9:
                 return False
