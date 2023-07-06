@@ -1,4 +1,5 @@
 from sudoku import Sudoku
+from copy import deepcopy
 
 puzzle = [
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
@@ -24,29 +25,61 @@ solution = [
     [3, 4, 5, 2, 8, 6, 1, 7, 9],
 ]
 
-s = Sudoku(puzzle)
-
-
-def test_row():
-    assert s.row(r=0) == [5, 3, 0, 0, 7, 0, 0, 0, 0]
-
-
-def test_col():
-    assert s.col(c=0) == [5, 6, 0, 8, 4, 7, 0, 0, 0]
-
-
-def test_block():
-    assert s.block(r=7, c=4) == [0, 0, 0, 4, 1, 9, 0, 8, 0]
-
-
-def test_possible():
-    assert s.possible(r=3, c=1) == [1, 2, 5]
-
-
-def test_next():
-    assert s.next() == (0, 2)
-
 
 def test_solve():
-    s.solve()
-    assert s.grid == solution
+    """Test correct Sudoku with unique solution"""
+    s = Sudoku(puzzle)
+    assert s.solve() == True and s.grid == solution
+
+
+def test_solve_valid_dimensions():
+    """Test incorrect Sudoku with invalid dimensions"""
+    s = Sudoku(puzzle[:5])
+    assert s.solve() == False
+
+
+def test_solve_integer_entries():
+    """Test incorrect Sudoku with string entry"""
+    p = deepcopy(puzzle)
+    p[0][0] = "A"
+    s = Sudoku(p)
+    assert s.solve() == False
+
+
+def test_solve_valid_integers():
+    """Test incorrect Sudoku with integers outside of 0-9 range"""
+    p = deepcopy(puzzle)
+    p[0][0] = 23
+    s = Sudoku(p)
+    assert s.solve() == False
+
+
+def test_solve_unique_solution():
+    """Test incorrect Sudoku with too few entries to have a unique solution"""
+    zeros = [[0, 0, 0, 0, 0, 0, 0, 0, 0] for _ in range(9)]
+    s = Sudoku(zeros)
+    assert s.solve() == False
+
+
+def test_solve_col_duplicates():
+    "Test incorrect Sudoku with duplicate entries in column"
+    p = deepcopy(puzzle)
+    p[0][0] = 6
+    s = Sudoku(p)
+    assert s.solve() == False
+
+
+def test_solve_row_duplicates():
+    "Test incorrect Sudoku with duplicate entries in row"
+    p = deepcopy(puzzle)
+    p[0][0] = 3
+    s = Sudoku(p)
+    assert s.solve() == False
+
+
+def test_solve_block_duplicates():
+    "Test incorrect Sudoku with duplicate entries in 3x3 block"
+    p = deepcopy(puzzle)
+    p[0][0] = 9
+    s = Sudoku(p)
+    assert s.solve() == False
